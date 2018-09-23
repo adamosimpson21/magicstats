@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "d3": "^5.7.0",
+    "moment": "^2.22.2",
     "mtgsdk": "^0.4.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

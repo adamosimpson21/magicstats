@@ -10,11 +10,11 @@ class Histogram extends Component {
 
       const x = d3.scaleBand()
           .range([width- margin.left - margin.right, 0])
-          .domain(data.map(d => d))
+          .domain(data.map(d => d.code))
           .padding(0.1)
       const y = d3.scaleLinear()
         .range([height- margin.top - margin.bottom, 0])
-        .domain([0, d3.max(data, d => d)])
+        .domain([0, d3.max(data, d => d.name.length)])
 
       return (<svg id="hallOfFameHisto" width={width} height={height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
@@ -26,17 +26,17 @@ class Histogram extends Component {
           <g className="axis axis--y">
             <g ref={node => d3.select(node).call(d3.axisLeft(y).ticks(10))} />
             <text transform="rotate(-90)" y="6" dy="0.71em" textAnchor="end">
-              Fame
+              Booster Size
             </text>
           </g>
           {data.map(d => (
             <rect
-              key={d.id}
+              key={d.code}
               className="bar"
-              x={x(d)}
-              y={y(d)}
+              x={x(d.code)}
+              y={y(d.name.length)}
               width={x.bandwidth()}
-              height={height - margin.bottom - margin.top - y(d)}
+              height={height - margin.bottom - margin.top - y(d.name.length)}
             />
           ))}
         </g>
