@@ -5,6 +5,7 @@ import Vizualization from "./viz/Vizualization";
 import moment from 'moment';
 import {sortCardsBySet} from "./helper";
 import SideBar from "./viz/SideBar";
+import Footer from "./Footer"
 
 class App extends Component {
   constructor(props){
@@ -13,7 +14,8 @@ class App extends Component {
       viz1Type : 'histogram',
       sets : [],
       viz2Type : 'histogram',
-      setsWithCards: [],
+      setsWithLegendaryCreatures: [],
+      setsWithAllCreatures: [],
       yAxis: 'length of set name'
     }
     this.handler = this.handler.bind(this)
@@ -25,7 +27,7 @@ class App extends Component {
 
   handler(e, variable){
     e.preventDefault()
-    if(variable === 'length of set name' || variable === 'length of creature name') {
+    if(variable === 'length of set name' || variable === 'length of creature name'|| variable === 'length of longest creature name') {
       this.setState({yAxis:variable})
     }
   }
@@ -41,21 +43,6 @@ class App extends Component {
       return -1;
   }
 
-  loadAllCreatureCards(sets){
-    let allCards = [];
-    let setCodes = sets.map(set => set.code).toString()
-    Magic.Cards.all({types:"creature", supertypes:"legendary", set:setCodes})
-      .on('data', cards => {
-            allCards.push(cards)
-          })
-      .on('end', () => {
-        const setsWithCards = sortCardsBySet(allCards, sets)
-        this.setState({setsWithCards})
-        this.setState({yAxis:'length of creature name'})
-        return setsWithCards
-      })
-  }
-
   loadSets(){
     let allSets = []
     Magic.Sets.where({type: "expansion"})
@@ -67,10 +54,41 @@ class App extends Component {
           .then(coreSets => {
             let sortedSets = allSets.concat(coreSets).sort(App.compareReleaseDate)
             this.setState({sets: sortedSets});
-            this.loadAllCreatureCards(sortedSets)
-        })
+            this.loadLegendaryCreatureCards(sortedSets)
+          })
       })
   }
+
+  loadLegendaryCreatureCards(sets){
+    let allCards = [];
+    let setCodes = sets.map(set => set.code).toString()
+    Magic.Cards.all({types:"creature", supertypes:"legendary", set:setCodes})
+      .on('data', cards => {
+            allCards.push(cards)
+          })
+      .on('end', () => {
+        const setsWithLegendaryCreatures = sortCardsBySet(allCards, sets)
+        this.setState({setsWithLegendaryCreatures})
+        this.setState({yAxis:'length of creature name'})
+        // this.loadAllCreatureCards(sets)
+      })
+  }
+
+  loadAllCreatureCards(sets){
+    let allCards = [];
+    let setCodes = sets.map(set => set.code).toString()
+    Magic.Cards.all({types:"creature", set:setCodes})
+      .on('data', cards => {
+        allCards.push(cards)
+      })
+      .on('end', () => {
+        const setsWithAllCreatures = sortCardsBySet(allCards, sets)
+        this.setState({setsWithAllCreatures})
+        this.setState({yAxis:'length of creature name'})
+      })
+  }
+
+
 
   render() {
     const {sets, viz1Type, viz2Type, yAxis} = this.state
@@ -82,6 +100,7 @@ class App extends Component {
         <SideBar handler={this.handler}/>
         <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} className='viz1'/>
         <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} className='viz2'/>
+        <Footer />
       </div>
     );
   }

@@ -1,0 +1,14 @@
+.sideBar{
+    float:right;
+    margin-top: 30vh;
+}
+
+.sideBarButton{
+    background-color: #569242;
+    font-weight:600;
+    color: #bdd906;
+    padding:6px;
+    border-radius:4px;
+    margin: 12px;
+    border: 2px solid silver;
+}
