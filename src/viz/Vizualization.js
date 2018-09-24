@@ -9,9 +9,9 @@ class Vizualization extends Component {
     const height = 420;
     const radius =  200;
     const innerRadius = 0;
-    const {type, data} = this.props
+    const {type, data, yAxis} = this.props
     if(type==='histogram' && data.length>0){
-      return(<Histogram width={width} height={height} data={data}/>)
+      return(<Histogram width={width} height={height} yAxis={yAxis} data={data}/>)
     } else if(type==='pie' && data.length>0){
       return(<PieChart width={width} height={height}  data={data} innerRadius={innerRadius} radius={radius}/>)
     } else {
