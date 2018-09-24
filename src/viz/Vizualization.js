@@ -12,10 +12,10 @@ class Vizualization extends Component {
     const {type, data} = this.props
     if(type==='histogram' && data.length>0){
       return(<Histogram width={width} height={height} data={data}/>)
-    } else if(type==='pie' && Object.keys(data)>0){
+    } else if(type==='pie' && data.length>0){
       return(<PieChart width={width} height={height}  data={data} innerRadius={innerRadius} radius={radius}/>)
     } else {
-      return(<div>Unknown type</div>)
+      return(<div>Data Loading</div>)
     }
   }
 }

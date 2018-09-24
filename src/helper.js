@@ -16,3 +16,17 @@ export function sortCardsBySet(allCards, allSets){
   console.log("setsWithCards is ", setsWithCards)
   return setsWithCards;
 }
+
+// takes a card object and returns array [P, T] if calculatable values. Otherwise returns null
+export function PTofCreature(card){
+  //  converts String Power or Toughness if possible, some values can't be calculated (X, 1+*, *, etc.)
+  function isConvertablePTtoNumber(pt){
+    return Number.isInteger(Number(pt))
+  }
+  // filter any card that isn't a creature with readable power/toughness
+  if(card.types.includes("Creature") && isConvertablePTtoNumber(card.power) && isConvertablePTtoNumber(card.toughness)){
+    return [Number(card.power), Number(card.toughness)]
+  } else {
+    return null
+  }
+}

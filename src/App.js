@@ -10,16 +10,14 @@ class App extends Component {
     super(props)
     this.state = {
       viz1Type : 'histogram',
-      viz1Data : {},
+      sets : [],
       viz2Type : 'histogram',
-      viz2Data : {},
       setsWithCards: []
     }
   }
 
   componentDidMount(){
-    this.loadViz1Data();
-    this.loadViz2Data();
+    this.loadSets()
   }
 
   static compareReleaseDate(a, b){
@@ -35,43 +33,43 @@ class App extends Component {
 
   loadAllCreatureCards(sets){
     let allCards = [];
-    // map setCodes to use as query parameter
     let setCodes = sets.map(set => set.code).toString()
-    Magic.Cards.all({types:"creature", gameFormat:"legacy", supertypes:"legendary", set:setCodes})
+    Magic.Cards.all({types:"creature", supertypes:"legendary", set:setCodes})
       .on('data', cards => {
             allCards.push(cards)
-            return cards
           })
       .on('end', () => {
-        this.setState({setsWithCards:sortCardsBySet(allCards, sets)})
-        return allCards
+        const setsWithCards = sortCardsBySet(allCards, sets)
+        this.setState({setsWithCards})
+        return setsWithCards
       })
   }
 
-  loadViz1Data(){
-    Magic.Sets.where()
-      .then(sets => sets.filter(set => set.type === 'expansion'))
-      .then( sets => {
-        console.log(sets);
-        this.setState({viz1Data: sets.sort(App.compareReleaseDate)});
-        this.loadAllCreatureCards(sets);
+  loadSets(){
+    let allSets = []
+    Magic.Sets.where({type: "expansion"})
+      .then(sets => {
+        allSets = sets
       })
-  }
-
-  loadViz2Data(){
-    Magic.Sets.where()
-      .then(sets => sets.filter(set => set.type === 'core'))
-      .then( sets => {
-        this.setState({viz2Data: sets.sort(App.compareReleaseDate)})
+      .then(() => {
+        Magic.Sets.where({type: "core"})
+          .then(coreSets => {
+            let sortedSets = allSets.concat(coreSets).sort(App.compareReleaseDate)
+            this.setState({sets: sortedSets});
+            this.loadAllCreatureCards(sortedSets)
+        })
       })
   }
 
   render() {
+    const {sets} = this.state
+    const expansions = sets.filter(set => set.type==='expansion')
+    const coreSets = sets.filter(set => set.type==='core')
     return (
       <div className="App">
         <h1 className='title'>The history of Magic: the Gathering, by the numbers</h1>
-        <Vizualization type={this.state.viz1Type} data={this.state.viz1Data} className='viz1'/>
-        <Vizualization type={this.state.viz2Type} data={this.state.viz2Data} className='viz2'/>
+        <Vizualization type={this.state.viz1Type} data={expansions} className='viz1'/>
+        <Vizualization type={this.state.viz2Type} data={coreSets} className='viz2'/>
       </div>
     );
   }
