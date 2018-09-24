@@ -6,6 +6,7 @@
     "d3": "^5.7.0",
     "moment": "^2.22.2",
     "mtgsdk": "^0.4.0",
+    "mtgsdk-ts": "^1.1.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5"

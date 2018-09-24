@@ -23,10 +23,13 @@ class Histogram extends Component {
             transform={`translate(0, ${height-margin.bottom-margin.top})`}
             ref={node => d3.select(node).call(d3.axisBottom(x))}
           />
+          <text textAnchor='middle' x={width/2} y={height-margin.top} className='xLabel'>
+            Set Release Date
+          </text>
           <g className="axis axis--y">
             <g ref={node => d3.select(node).call(d3.axisLeft(y).ticks(10))} />
-            <text transform="rotate(-90)" y="6" dy="0.71em" textAnchor="end">
-              Booster Size
+            <text transform="rotate(-90)" y="12" dy=".71em" textAnchor="end" className='yLabel'>
+              Length of Set Name
             </text>
           </g>
           {data.map(d => (
@@ -38,6 +41,19 @@ class Histogram extends Component {
               width={x.bandwidth()}
               height={height - margin.bottom - margin.top - y(d.name.length)}
             />
+          ))}
+          {data.map(d => (
+            <text
+              key={d.code}
+              className='setName'
+              x={x(d.code)+2}
+              y={y(d.name.length)-x.bandwidth()/2+4}
+              height={height - margin.bottom - margin.top - y(d.name.length)}
+              transform={`rotate(90, ${x(d.code)}, ${y(d.name.length)})`}
+              letterSpacing={((height - margin.bottom - margin.top - y(d.name.length))/(d.name.length))-6}
+            >
+              {d.name}
+            </text>
           ))}
         </g>
       </svg>)

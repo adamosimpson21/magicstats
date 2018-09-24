@@ -6,7 +6,7 @@ import Histogram from "./Histogram";
 class Vizualization extends Component {
   render(){
     const width = 1200;
-    const height = 400;
+    const height = 420;
     const radius =  200;
     const innerRadius = 0;
     const {type, data} = this.props

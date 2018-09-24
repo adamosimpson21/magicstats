@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-import * as mtg from 'mtgsdk'
+import * as Magic from 'mtgsdk-ts'
 import Vizualization from "./viz/Vizualization";
 import moment from 'moment';
+import {sortCardsBySet} from "./helper";
 
 class App extends Component {
   constructor(props){
@@ -11,7 +12,8 @@ class App extends Component {
       viz1Type : 'histogram',
       viz1Data : {},
       viz2Type : 'histogram',
-      viz2Data : {}
+      viz2Data : {},
+      setsWithCards: []
     }
   }
 
@@ -20,7 +22,7 @@ class App extends Component {
     this.loadViz2Data();
   }
 
-  compareReleaseDate(a, b){
+  static compareReleaseDate(a, b){
     let newA = moment(a.releaseDate)
     let newB = moment(b.releaseDate)
     if (newA < newB)
@@ -31,20 +33,36 @@ class App extends Component {
       return -1;
   }
 
-  loadViz1Data(){
-    mtg.set.where({type: 'expansion'})
-      .then( sets => {
-        console.log(sets)
+  loadAllCreatureCards(sets){
+    let allCards = [];
+    // map setCodes to use as query parameter
+    let setCodes = sets.map(set => set.code).toString()
+    Magic.Cards.all({types:"creature", gameFormat:"legacy", supertypes:"legendary", set:setCodes})
+      .on('data', cards => {
+            allCards.push(cards)
+            return cards
+          })
+      .on('end', () => {
+        this.setState({setsWithCards:sortCardsBySet(allCards, sets)})
+        return allCards
+      })
+  }
 
-        this.setState({viz1Data: sets.sort(this.compareReleaseDate)})
+  loadViz1Data(){
+    Magic.Sets.where()
+      .then(sets => sets.filter(set => set.type === 'expansion'))
+      .then( sets => {
+        console.log(sets);
+        this.setState({viz1Data: sets.sort(App.compareReleaseDate)});
+        this.loadAllCreatureCards(sets);
       })
   }
 
   loadViz2Data(){
-    mtg.set.where({type: 'core'})
+    Magic.Sets.where()
+      .then(sets => sets.filter(set => set.type === 'core'))
       .then( sets => {
-        console.log(sets)
-        this.setState({viz2Data: sets.sort(this.compareReleaseDate)})
+        this.setState({viz2Data: sets.sort(App.compareReleaseDate)})
       })
   }
 
