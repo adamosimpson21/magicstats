@@ -17,7 +17,7 @@ class Histogram extends Component {
         .range([height- margin.top - margin.bottom, 0])
         .domain([0, d3.max(data, d => graphVariables[yAxis].domain(d))])
 
-      return (<svg id="hallOfFameHisto" width={width} height={height}>
+      return (<svg id="mtgStatsHisto" width={width} height={height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           <g
             className="axis axis--x"
@@ -51,7 +51,7 @@ class Histogram extends Component {
               y={y(graphVariables[yAxis].domain(d))-x.bandwidth()/2+4}
               height={height - margin.bottom - margin.top - y(graphVariables[yAxis].domain(d))}
               transform={`rotate(90, ${x(d.code)}, ${y(graphVariables[yAxis].domain(d))})`}
-              letterSpacing={((height - margin.bottom - margin.top - y(graphVariables[yAxis].domain(d)))/(graphVariables[yAxis].domain(d)))-6}
+              letterSpacing={((height - margin.bottom - margin.top - y(graphVariables[yAxis].domain(d)))/(graphVariables[yAxis].domain(d)))+graphVariables[yAxis].letterSpacingMargin}
             >
               {graphVariables[yAxis].barLabel(d)}
             </text>

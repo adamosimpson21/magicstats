@@ -27,7 +27,11 @@ class App extends Component {
 
   handler(e, variable){
     e.preventDefault()
-    if(variable === 'length of set name' || variable === 'length of creature name'|| variable === 'length of longest creature name') {
+    if(variable === 'length of set name' ||
+      variable === 'length of creature name'||
+      variable === 'total CMC of creatures'||
+      variable === 'average CMC of creatures'||
+      variable === 'length of longest creature name') {
       this.setState({yAxis:variable})
     }
   }
@@ -60,14 +64,14 @@ class App extends Component {
   }
 
   loadLegendaryCreatureCards(sets){
-    let allCards = [];
-    let setCodes = sets.map(set => set.code).toString()
-    Magic.Cards.all({types:"creature", supertypes:"legendary", set:setCodes})
+    let allLegends = [];
+    // let setCodes = sets.map(set => set.code).toString()
+    Magic.Cards.all({types:"creature", supertypes:"legendary"})
       .on('data', cards => {
-            allCards.push(cards)
+        allLegends.push(cards)
           })
       .on('end', () => {
-        const setsWithLegendaryCreatures = sortCardsBySet(allCards, sets)
+        const setsWithLegendaryCreatures = sortCardsBySet(allLegends, sets)
         this.setState({setsWithLegendaryCreatures})
         this.setState({yAxis:'length of creature name'})
         // this.loadAllCreatureCards(sets)
@@ -76,28 +80,26 @@ class App extends Component {
 
   loadAllCreatureCards(sets){
     let allCards = [];
-    let setCodes = sets.map(set => set.code).toString()
-    Magic.Cards.all({types:"creature", set:setCodes})
+    Magic.Cards.all({types:"creature"})
       .on('data', cards => {
         allCards.push(cards)
       })
       .on('end', () => {
         const setsWithAllCreatures = sortCardsBySet(allCards, sets)
         this.setState({setsWithAllCreatures})
-        this.setState({yAxis:'length of creature name'})
       })
   }
 
 
 
   render() {
-    const {sets, viz1Type, viz2Type, yAxis} = this.state
+    const {sets, viz1Type, viz2Type, yAxis, setsWithLegendaryCreatures, setsWithAllCreatures} = this.state
     const expansions = sets.filter(set => set.type==='expansion')
     const coreSets = sets.filter(set => set.type==='core')
     return (
       <div className="App">
         <h1 className='title'>The history of Magic: the Gathering, by the numbers</h1>
-        <SideBar handler={this.handler}/>
+        <SideBar handler={this.handler} sets={sets} setsWithLegendaryCreatures={setsWithLegendaryCreatures} setsWithAllCreatures={setsWithAllCreatures}/>
         <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} className='viz1'/>
         <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} className='viz2'/>
         <Footer />
