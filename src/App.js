@@ -16,6 +16,7 @@ class App extends Component {
       viz2Type : 'histogram',
       setsWithLegendaryCreatures: [],
       setsWithAllCreatures: [],
+      dataType: 'sets',
       yAxis: 'length of set name'
     }
     this.handler = this.handler.bind(this)
@@ -33,6 +34,11 @@ class App extends Component {
       variable === 'average CMC of creatures'||
       variable === 'length of longest creature name') {
       this.setState({yAxis:variable})
+    }
+    if(variable === 'sets' ||
+      variable === 'setsWithLegendaryCreatures'||
+      variable === 'setsWithAllCreatures') {
+      this.setState({dataType:variable})
     }
   }
 
@@ -59,6 +65,7 @@ class App extends Component {
             let sortedSets = allSets.concat(coreSets).sort(App.compareReleaseDate)
             this.setState({sets: sortedSets});
             this.loadLegendaryCreatureCards(sortedSets)
+            this.loadAllCreatureCards(sortedSets)
           })
       })
   }
@@ -73,14 +80,13 @@ class App extends Component {
       .on('end', () => {
         const setsWithLegendaryCreatures = sortCardsBySet(allLegends, sets)
         this.setState({setsWithLegendaryCreatures})
-        this.setState({yAxis:'length of creature name'})
-        // this.loadAllCreatureCards(sets)
+        this.setState({yAxis:'length of creature name', dataType:'setsWithLegendaryCreatures'})
       })
   }
 
   loadAllCreatureCards(sets){
     let allCards = [];
-    Magic.Cards.all({types:"creature"})
+    Magic.Cards.all({types:"creature", colors:"green"})
       .on('data', cards => {
         allCards.push(cards)
       })
@@ -93,15 +99,15 @@ class App extends Component {
 
 
   render() {
-    const {sets, viz1Type, viz2Type, yAxis, setsWithLegendaryCreatures, setsWithAllCreatures} = this.state
+    const {sets, viz1Type, viz2Type, yAxis, setsWithLegendaryCreatures, setsWithAllCreatures, dataType} = this.state
     const expansions = sets.filter(set => set.type==='expansion')
     const coreSets = sets.filter(set => set.type==='core')
     return (
       <div className="App">
         <h1 className='title'>The history of Magic: the Gathering, by the numbers</h1>
-        <SideBar handler={this.handler} sets={sets} setsWithLegendaryCreatures={setsWithLegendaryCreatures} setsWithAllCreatures={setsWithAllCreatures}/>
-        <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} className='viz1'/>
-        <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} className='viz2'/>
+        <SideBar handler={this.handler} sets={sets} setsWithLegendaryCreatures={setsWithLegendaryCreatures} setsWithAllCreatures={setsWithAllCreatures} dataType={dataType}/>
+        <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} dataType={dataType} className='viz1'/>
+        <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} dataType={dataType} className='viz2'/>
         <Footer />
       </div>
     );

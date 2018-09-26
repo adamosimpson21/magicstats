@@ -1,5 +1,6 @@
 export function sortCardsBySet(allCards, allSets){
-  let setsWithCards = allSets;
+  // Deep Clone
+  let setsWithCards = JSON.parse(JSON.stringify(allSets));
   //add empty array for cards to be put in
   setsWithCards.forEach(set => {
     set.cards = []
@@ -18,6 +19,7 @@ export function sortCardsBySet(allCards, allSets){
 }
 
 // takes a card object and returns array [P, T] if calculatable values. Otherwise returns null
+// TODO: under construction
 export function PTofCreature(card){
   //  converts String Power or Toughness if possible, some values can't be calculated (X, 1+*, *, etc.)
   function isConvertablePTtoNumber(pt){

@@ -117,7 +117,7 @@ graphVariables['average CMC of creatures'] = {
       return 0
     }
   },
-  letterSpacingMargin:-40
+  letterSpacingMargin:-70
 }
 
 export default graphVariables;
