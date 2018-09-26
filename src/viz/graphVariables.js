@@ -1,6 +1,8 @@
 
 let graphVariables = {}
 
+// TODO: is there a better way to do this? How can we improve on what's already here? Refactor?
+// TODO: Add more options for calculations
 graphVariables['length of set name'] = {
   axisLabel: "Length of Set Name",
   domain: (d => d.name.length),
@@ -117,7 +119,7 @@ graphVariables['average CMC of creatures'] = {
       return 0
     }
   },
-  letterSpacingMargin:-70
+  letterSpacingMargin:-40
 }
 
 export default graphVariables;

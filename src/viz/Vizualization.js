@@ -13,6 +13,7 @@ class Vizualization extends Component {
     if(type==='histogram' && data.length>0){
       return(<Histogram width={width} height={height} yAxis={yAxis} data={data}/>)
     } else if(type==='pie' && data.length>0){
+      // TODO: Have pie chart function properly, make pie charts useful?
       return(<PieChart width={width} height={height}  data={data} innerRadius={innerRadius} radius={radius}/>)
     } else {
       return(<div>Data Loading</div>)

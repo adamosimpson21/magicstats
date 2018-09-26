@@ -28,6 +28,7 @@ class App extends Component {
 
   handler(e, variable){
     e.preventDefault()
+    // TODO : switch statement?
     if(variable === 'length of set name' ||
       variable === 'length of creature name'||
       variable === 'total CMC of creatures'||
@@ -35,6 +36,7 @@ class App extends Component {
       variable === 'length of longest creature name') {
       this.setState({yAxis:variable})
     }
+    // TODO : switch statement?
     if(variable === 'sets' ||
       variable === 'setsWithLegendaryCreatures'||
       variable === 'setsWithAllCreatures') {
@@ -84,6 +86,7 @@ class App extends Component {
       })
   }
 
+  // TODO : Allow more types of creatures, work on getting data from api quickly and efficiently without exceeding rate limit
   loadAllCreatureCards(sets){
     let allCards = [];
     Magic.Cards.all({types:"creature", colors:"green"})
@@ -100,14 +103,31 @@ class App extends Component {
 
   render() {
     const {sets, viz1Type, viz2Type, yAxis, setsWithLegendaryCreatures, setsWithAllCreatures, dataType} = this.state
-    const expansions = sets.filter(set => set.type==='expansion')
-    const coreSets = sets.filter(set => set.type==='core')
+    // TODO: break out some of this logic into different helper methods, getting too cluttered :)
+    let dataToUse = []
+    switch (dataType){
+      case 'sets':
+        dataToUse = sets;
+        break;
+      case 'setsWithAllCreatures':
+        dataToUse = setsWithAllCreatures;
+        break;
+      case 'setsWithLegendaryCreatures':
+        dataToUse = setsWithLegendaryCreatures;
+        break;
+      default:
+        dataToUse = sets;
+        break;
+    }
+    const expansions = dataToUse.filter(set => set.type==='expansion')
+    const coreSets = dataToUse.filter(set => set.type==='core')
     return (
       <div className="App">
         <h1 className='title'>The history of Magic: the Gathering, by the numbers</h1>
+        {/* TODO: Is there a better way to do this? Refactor? */}
         <SideBar handler={this.handler} sets={sets} setsWithLegendaryCreatures={setsWithLegendaryCreatures} setsWithAllCreatures={setsWithAllCreatures} dataType={dataType}/>
-        <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} dataType={dataType} className='viz1'/>
-        <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} dataType={dataType} className='viz2'/>
+        <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} className='viz1'/>
+        <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} className='viz2'/>
         <Footer />
       </div>
     );

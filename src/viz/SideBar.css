@@ -1,10 +1,10 @@
 .sideBar{
     float:right;
-    margin-top: 30vh;
+    margin-top: 10vh;
     max-width:300px;
 }
 
-.sideBarButton{
+.switchYAxis{
     background-color: #569242;
     font-size:18px;
     font-weight:600;
@@ -22,10 +22,18 @@
     font-weight:600;
     color: #bdd906;
     border-radius:4px;
-    margin: 12px;
+    margin: 8px;
+    padding:4px;
     border: 3px solid silver;
     outline: 1px solid black;
     min-width:40%;
+}
+
+.switchDataButton{
+    border:none;
+    background:none;
+    color:inherit;
+    outline:inherit;
 }
 
 .dataLoadedText{

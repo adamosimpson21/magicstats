@@ -33,6 +33,7 @@ class Histogram extends Component {
               {graphVariables[yAxis].axisLabel}
             </text>
           </g>
+          {/* TODO: Linear gradient/additional styling for histogram data*/}
           {data.map(d => (
             <rect
               key={d.code}
@@ -43,6 +44,7 @@ class Histogram extends Component {
               height={height - margin.bottom - margin.top - y(graphVariables[yAxis].domain(d))}
             />
           ))}
+          {/* TODO: break out into separate component */}
           {data.map(d => (
             <text
               key={d.code}

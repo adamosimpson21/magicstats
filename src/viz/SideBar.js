@@ -6,21 +6,40 @@ class SideBar extends Component{
   render(){
     const {handler, sets, setsWithLegendaryCreatures, setsWithAllCreatures} = this.props
     return(<div className='sideBar'>
+      {/* TODO: break out this menu and buttons into separate components*/}
       <div className='dataLoadedMenu'>
-        <div className='dataLoadedConfirmation'><div className='dataLoadedText'>Sets Loaded:</div> {sets.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>} </div>
-        <div className='dataLoadedConfirmation'><div className='dataLoadedText'>Legendary <br/> Creatures:</div> {setsWithLegendaryCreatures.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>} </div>
+        <button className='switchDataButton' onClick={(e) => handler(e, 'sets')}>
+          <div className='dataLoadedConfirmation'>
+            <div className='dataLoadedText'>Sets Loaded:</div>
+          {sets.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>}
+          </div>
+        </button>
+        <button className='switchDataButton' onClick={(e) => handler(e, 'setsWithLegendaryCreatures')}>
+          <div className='dataLoadedConfirmation'>
+            <div className='dataLoadedText'>
+              Legendary <br/> Creatures:</div>
+            {setsWithLegendaryCreatures.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>}
+          </div>
+        </button>
       </div>
       <div className='dataLoadedMenu'>
-        <div className='dataLoadedConfirmation'><div className='dataLoadedText'>All <br/> Creatures:</div> {setsWithAllCreatures.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>} </div>
+        <button className='switchDataButton' onClick={(e) => handler(e, 'setsWithAllCreatures')}>
+          <div className='dataLoadedConfirmation'>
+            <div className='dataLoadedText'>
+              All <br/> Creatures:</div>
+            {setsWithAllCreatures.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>}
+          </div>
+        </button>
       </div>
-      <button className='sideBarButton' onClick={(e) => handler(e, 'length of creature name')}>Length of First Creature Name</button>
+      {/* TODO: break out this menu and buttons into separate components*/}
+      <button className='switchYAxis' onClick={(e) => handler(e, 'length of creature name')}>Length of First Creature Name</button>
       <br />
-      <button className='sideBarButton' onClick={(e) => handler(e, 'length of set name')}>Length of Set Name</button>
+      <button className='switchYAxis' onClick={(e) => handler(e, 'length of set name')}>Length of Set Name</button>
       <br />
-      <button className='sideBarButton' onClick={(e) => handler(e, 'length of longest creature name')}>Longest Creature Name in Set</button>
+      <button className='switchYAxis' onClick={(e) => handler(e, 'length of longest creature name')}>Longest Creature Name in Set</button>
       <br />
-      <button className='sideBarButton' onClick={(e) => handler(e, 'total CMC of creatures')}>Total CMC of Creatures</button><br />
-      <button className='sideBarButton' onClick={(e) => handler(e, 'average CMC of creatures')}>Average CMC of Creatures</button>
+      <button className='switchYAxis' onClick={(e) => handler(e, 'total CMC of creatures')}>Total CMC of Creatures</button><br />
+      <button className='switchYAxis' onClick={(e) => handler(e, 'average CMC of creatures')}>Average CMC of Creatures</button>
     </div>)
   }
 }
