@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import * as Magic from 'mtgsdk-ts'
 import Vizualization from "./viz/Vizualization";
-import moment from 'moment';
-import {sortCardsBySet} from "./helper";
+import {sortCardsBySet, compareReleaseDate} from "./helper";
 import SideBar from "./viz/SideBar";
 import Footer from "./Footer"
 
@@ -12,8 +11,8 @@ class App extends Component {
     super(props)
     this.state = {
       viz1Type : 'histogram',
-      sets : [],
       viz2Type : 'histogram',
+      sets : [],
       setsWithLegendaryCreatures: [],
       setsWithAllCreatures: [],
       dataType: 'sets',
@@ -28,7 +27,6 @@ class App extends Component {
 
   handler(e, variable){
     e.preventDefault()
-    // TODO : switch statement?
     if(variable === 'length of set name' ||
       variable === 'length of creature name'||
       variable === 'total CMC of creatures'||
@@ -36,23 +34,11 @@ class App extends Component {
       variable === 'length of longest creature name') {
       this.setState({yAxis:variable})
     }
-    // TODO : switch statement?
     if(variable === 'sets' ||
       variable === 'setsWithLegendaryCreatures'||
       variable === 'setsWithAllCreatures') {
       this.setState({dataType:variable})
     }
-  }
-
-  static compareReleaseDate(a, b){
-    let newA = moment(a.releaseDate)
-    let newB = moment(b.releaseDate)
-    if (newA < newB)
-      return 1;
-    else if (newA === newB)
-      return 0;
-    else
-      return -1;
   }
 
   loadSets(){
@@ -64,7 +50,7 @@ class App extends Component {
       .then(() => {
         Magic.Sets.where({type: "core"})
           .then(coreSets => {
-            let sortedSets = allSets.concat(coreSets).sort(App.compareReleaseDate)
+            let sortedSets = allSets.concat(coreSets).sort(compareReleaseDate)
             this.setState({sets: sortedSets});
             this.loadLegendaryCreatureCards(sortedSets)
             this.loadAllCreatureCards(sortedSets)
@@ -99,8 +85,6 @@ class App extends Component {
       })
   }
 
-
-
   render() {
     const {sets, viz1Type, viz2Type, yAxis, setsWithLegendaryCreatures, setsWithAllCreatures, dataType} = this.state
     // TODO: break out some of this logic into different helper methods, getting too cluttered :)
@@ -121,11 +105,11 @@ class App extends Component {
     }
     const expansions = dataToUse.filter(set => set.type==='expansion')
     const coreSets = dataToUse.filter(set => set.type==='core')
+    const sideBarProps = {sets:sets, setsWithLegendaryCreatures:setsWithLegendaryCreatures, setsWithAllCreatures:setsWithAllCreatures, dataType:dataType}
     return (
       <div className="App">
         <h1 className='title'>The history of Magic: the Gathering, by the numbers</h1>
-        {/* TODO: Is there a better way to do this? Refactor? */}
-        <SideBar handler={this.handler} sets={sets} setsWithLegendaryCreatures={setsWithLegendaryCreatures} setsWithAllCreatures={setsWithAllCreatures} dataType={dataType}/>
+        <SideBar handler={this.handler} {...sideBarProps}/>
         <Vizualization type={viz1Type} data={expansions} yAxis={yAxis} className='viz1'/>
         <Vizualization type={viz2Type} data={coreSets} yAxis={yAxis} className='viz2'/>
         <Footer />

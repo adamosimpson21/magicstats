@@ -62,28 +62,20 @@ graphVariables['length of longest creature name'] = {
 
 graphVariables['total CMC of creatures'] = {
   axisLabel: "Total CMC of Creatures",
-  domain: function (d) {
+  domain: d => {
     if (d.cards && d.cards.length > 0) {
-      let totalCMC = 0
-      d.cards.forEach(card => {
-        if (Number.isInteger(card.cmc)) {
-          totalCMC += card.cmc;
-        }
-      })
-      return totalCMC;
+      return( d.cards.reduce((acc, nextCard) => {
+        return acc + nextCard.cmc
+      }, 0))
     } else {
       return 0
     }
   },
-  barLabel: function (d) {
+  barLabel: d => {
     if (d.cards && d.cards.length > 0) {
-      let totalCMC = 0
-      d.cards.forEach(card => {
-        if (Number.isInteger(card.cmc)) {
-          totalCMC += card.cmc;
-        }
-      })
-      return totalCMC;
+      return( d.cards.reduce((acc, nextCard) => {
+        return acc + nextCard.cmc
+      }, 0))
     } else {
       return 0
     }
@@ -93,28 +85,20 @@ graphVariables['total CMC of creatures'] = {
 
 graphVariables['average CMC of creatures'] = {
   axisLabel: "Average CMC of Creatures",
-  domain: function (d) {
+  domain: d => {
     if (d.cards && d.cards.length > 0) {
-      let totalCMC = 0
-      d.cards.forEach(card => {
-        if (Number.isInteger(card.cmc)) {
-          totalCMC += card.cmc;
-        }
-      })
-      return (totalCMC/d.cards.length).toFixed(2);
+      return((d.cards.reduce((acc, nextCard) => {
+        return acc + nextCard.cmc
+      }, 0)/d.cards.length).toFixed(2));
     } else {
       return 0
     }
   },
   barLabel: function (d) {
     if (d.cards && d.cards.length > 0) {
-      let totalCMC = 0
-      d.cards.forEach(card => {
-        if (Number.isInteger(card.cmc)) {
-          totalCMC += card.cmc;
-        }
-      })
-      return (totalCMC/d.cards.length).toFixed(2);
+      return((d.cards.reduce((acc, nextCard) => {
+        return acc + nextCard.cmc
+      }, 0)/d.cards.length).toFixed(2));
     } else {
       return 0
     }

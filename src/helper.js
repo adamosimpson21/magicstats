@@ -1,4 +1,6 @@
 // TODO: Can this be refactored?
+import moment from "moment";
+
 export function sortCardsBySet(allCards, allSets){
   // Deep Clone
   let setsWithCards = JSON.parse(JSON.stringify(allSets));
@@ -8,13 +10,12 @@ export function sortCardsBySet(allCards, allSets){
   })
   //put cards into set buckets
   allCards.forEach(card => {
-    setsWithCards.forEach((set, index) => {
+    setsWithCards.forEach(set => {
       if(set.code === card.set){
-        setsWithCards[index].cards.push(card);
+        set.cards.push(card);
       }
     })
   })
-  console.log("setsWithCards is ", setsWithCards)
   return setsWithCards;
 }
 
@@ -31,4 +32,15 @@ export function PTofCreature(card){
   } else {
     return null
   }
+}
+
+export function compareReleaseDate(a, b){
+  let newA = moment(a.releaseDate)
+  let newB = moment(b.releaseDate)
+  if (newA < newB)
+    return 1;
+  else if (newA === newB)
+    return 0;
+  else
+    return -1;
 }

@@ -1,19 +1,16 @@
 import React, {Component} from 'react'
 import './SideBar.css'
 import Icon from '../innerComps/Icon'
+import SwitchDataButton from "../innerComps/SwitchDataButton";
 
 class SideBar extends Component{
   render(){
     const {handler, sets, setsWithLegendaryCreatures, setsWithAllCreatures} = this.props
+
     return(<div className='sideBar'>
       {/* TODO: break out this menu and buttons into separate components*/}
       <div className='dataLoadedMenu'>
-        <button className='switchDataButton' onClick={(e) => handler(e, 'sets')}>
-          <div className='dataLoadedConfirmation'>
-            <div className='dataLoadedText'>Sets Loaded:</div>
-          {sets.length>1 ? <Icon icon='success'/> :  <Icon icon='close'/>}
-          </div>
-        </button>
+        <SwitchDataButton handler={handler} data={sets}/>
         <button className='switchDataButton' onClick={(e) => handler(e, 'setsWithLegendaryCreatures')}>
           <div className='dataLoadedConfirmation'>
             <div className='dataLoadedText'>
